@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "J9Ck6s4mjWrUuC6g3627LcFJ/Nc6KvQ9rdAIAgb6ouU877sDScubyTLtcHg/IYcIkj/uuebiAJN8pKDPhFxrKA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\stron\\RiderProjects\\MinimalWebApi\\MinimalWebApi\\MinimalWebApi.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\stron\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
+    "C:\\Users\\stron\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\stron\\.nuget\\packages\\swashbuckle.aspnetcore\\6.2.3\\swashbuckle.aspnetcore.6.2.3.nupkg.sha512",
+    "C:\\Users\\stron\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.2.3\\swashbuckle.aspnetcore.swagger.6.2.3.nupkg.sha512",
+    "C:\\Users\\stron\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.2.3\\swashbuckle.aspnetcore.swaggergen.6.2.3.nupkg.sha512",
+    "C:\\Users\\stron\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.2.3\\swashbuckle.aspnetcore.swaggerui.6.2.3.nupkg.sha512"
+  ],
+  "logs": []
+}
