@@ -1,25 +1,69 @@
+using System.Linq;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using MinimalWebApi;
+
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"));
+services.AddDatabaseDeveloperPageExceptionFilter();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.MapGet("/", () => "Hello World");
+
+app.MapGet("/todoitems", async (TodoDb db) => 
+    await db.Todos.Select(x => new TodoDTO(x)).ToListAsync());
+app.MapGet("/todoitems/complete", async (TodoDb db) => 
+    await db.Todos.Where(t => t.IsComplete).Select(x => new TodoDTO(x)).ToListAsync());
+app.MapGet("/todoitems/{id}", async (int id, TodoDb db) =>
+    await db.Todos.FindAsync(id)
+        is Todo todo
+        ? Results.Ok(new TodoDTO(todo))
+        : Results.NotFound());
+
+app.MapPost("/todoitems", async (TodoDTO todoDTO, TodoDb db) =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    var todo = new Todo
+    {
+        Name = todoDTO.Name,
+        IsComplete = todoDTO.IsComplete,
+    };
+    
+    db.Todos.Add(todo);
+    await db.SaveChangesAsync();
 
-app.UseHttpsRedirection();
+    return Results.Created($"/todoitems/{todo.Id}", new TodoDTO(todo));
+});
 
-app.UseAuthorization();
+app.MapPut("/todoitems/{id}", async (int id, TodoDTO inputTodoDTO, TodoDb db) =>
+{
+    
+    var todo = await db.Todos.FindAsync(id);
 
-app.MapControllers();
+    if (todo is null) return Results.NotFound();
+
+    todo.Name = inputTodoDTO.Name;
+    todo.IsComplete = inputTodoDTO.IsComplete;
+
+    await db.SaveChangesAsync();
+
+    return Results.NoContent();
+});
+
+app.MapDelete("/todoitems/{id}", async (int id, TodoDb db) =>
+{
+    if (await db.Todos.FindAsync(id) is Todo todo)
+    {
+        db.Todos.Remove(todo);
+        await db.SaveChangesAsync();
+        return Results.Ok(new TodoDTO(todo));
+    }
+
+    return Results.NotFound();
+});
 
 app.Run();
